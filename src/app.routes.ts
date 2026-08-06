@@ -8,7 +8,7 @@ export const appRoutes: Routes = [
     {
         path: MY_ROUTES.main,
         loadComponent: () => import('@layout/component/app.layout-main'),
-        // canActivate: [tokenGuard, accountGuard],
+        canActivate: [tokenGuard, accountGuard],
         children: [
             {path: MY_ROUTES.adminPages.base, loadChildren: () => import('./app/pages/admin/admin.routes')},
             {path: MY_ROUTES.dashboards.base, loadChildren: () => import('./app/pages/dashboards/dashboard.routes')},

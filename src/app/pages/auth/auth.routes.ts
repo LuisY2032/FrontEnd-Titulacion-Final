@@ -7,6 +7,11 @@ export default [
         title: 'Login',
         loadComponent: () => import('./components/sign-in/components/sign-in-container')
     },
+    {
+    path: 'email-verification',
+    title: 'Verificación de Email',
+    loadComponent: () => import('./components/email-verification/email-verification.component'),
+  },
 
 ] as Routes;
 // {

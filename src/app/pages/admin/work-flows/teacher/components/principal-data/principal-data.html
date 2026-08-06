@@ -1,0 +1,57 @@
+<div class="custom-form-card">
+    <div class="custom-form-grid md:grid-cols-12">
+        <div class="custom-form-section md:col-span-12 text-center">
+            Calificaciones
+        </div>
+
+        <div class="custom-form-field md:col-span-4">
+            <label
+                appLabel for="grade1"
+                label="Parcial 1"
+                [field]="$any(formData.grade1)"></label>
+
+            <p-inputnumber
+                id="grade1"
+                [formField]="$any(formData.grade1)"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+                class="w-full"
+                inputStyleClass="w-full"/>
+
+            <small [appErrorMessage]="$any(formData.grade1)"></small>
+        </div>
+
+        <div class="custom-form-field md:col-span-4">
+            <label
+                appLabel for="grade2"
+                label="Parcial 2"
+                [field]="$any(formData.grade2)"></label>
+
+            <p-inputnumber
+                id="grade2"
+                [formField]="$any(formData.grade2)"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+                class="w-full"
+                inputStyleClass="w-full"/>
+
+            <small [appErrorMessage]="$any(formData.grade2)"></small>
+        </div>
+
+        <div class="custom-form-field md:col-span-4">
+            <label
+                appLabel for="attendance"
+                label="Asistencia"
+                [field]="$any(formData.attendance)"></label>
+
+            <p-inputnumber
+                id="attendance"
+                [formField]="$any(formData.attendance)"
+                suffix="%"
+                class="w-full"
+                inputStyleClass="w-full"/>
+
+            <small [appErrorMessage]="$any(formData.attendance)"></small>
+        </div>
+    </div>
+</div>

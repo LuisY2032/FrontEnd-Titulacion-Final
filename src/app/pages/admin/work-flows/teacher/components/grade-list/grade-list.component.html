@@ -1,0 +1,124 @@
+<div class="card">
+    <p-toolbar class="mb-4">
+        <ng-template pTemplate="left">
+            <h5 class="m-0 font-bold">Listado de Estudiantes</h5>
+        </ng-template>
+    </p-toolbar>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b bg-gray-50">
+                    <th class="p-3">Estudiante</th>
+                    <th class="p-3">Cédula</th>
+                    <th class="p-3 text-center">Parcial 1</th>
+                    <th class="p-3 text-center">Parcial 2</th>
+                    <th class="p-3 text-center">Asistencia</th>
+                    <th class="p-3 text-center">Nota Final</th>
+                    <th class="p-3 text-center">Estado</th> <!-- Columna 7 -->
+                    <th class="p-3 text-center">Acciones</th> <!-- Columna 8 -->
+                </tr>
+            </thead>
+            <tbody>
+                @if (isLoading()) {
+                    <tr>
+                        <!-- 🟢 Actualizado a colspan="8" -->
+                        <td colspan="8" class="text-center p-4">
+                            Cargando estudiantes...
+                        </td>
+                    </tr>
+                } @else {
+                    @if (students().length === 0) {
+                        <tr>
+                            <!-- 🟢 Actualizado a colspan="8" -->
+                            <td colspan="8" class="text-center p-4">
+                                No se encontraron estudiantes registrados o el servidor no respondió.
+                            </td>
+                        </tr>
+                    } @else {
+                        @for (detail of students(); track detail.id) {
+                            <tr class="border-b hover:bg-gray-50">
+                                <!-- Estudiante -->
+                                <td class="p-3 font-semibold">
+                                    {{ detail.enrollment?.student?.user?.lastname }} 
+                                    {{ detail.enrollment?.student?.user?.name }}
+                                </td>
+                                
+                                <!-- Cédula / Identificación -->
+                                <td class="p-3">
+                                    {{ detail.enrollment?.student?.user?.identification ?? '-' }}
+                                </td>
+                                
+                                <!-- Parcial 1 -->
+                                <td class="p-3 text-center font-bold text-blue-600">
+                                    {{ getGradeByPartial(detail, '1') }}
+                                </td>
+
+                                <!-- Parcial 2 -->
+                                <td class="p-3 text-center font-bold text-blue-600">
+                                    {{ getGradeByPartial(detail, '2') }}
+                                </td>
+
+                                <!-- Asistencia General -->
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded bg-slate-100 font-semibold">
+                                        {{ detail.finalAttendance ?? 0 }}%
+                                    </span>
+                                </td>
+
+                                <!-- Nota Final -->
+                                <td class="p-3 text-center font-bold text-green-600">
+                                    {{ detail.finalGrade ?? '-' }}
+                                </td>
+
+                                <!-- 🟢 COLUMNA DE ESTADO ACADÉMICO -->
+                                <td class="p-3 text-center">
+                                    @let state = detail.academicState?.name ?? 'PENDIENTE';
+                                    <span [class]="{
+                                        'px-2 py-1 rounded-full text-xs font-bold': true,
+                                        'bg-green-100 text-green-700': state === 'APROBADO' || state === 'a',
+                                        'bg-red-100 text-red-700': state === 'REPROBADO' || state === 'r',
+                                        'bg-yellow-100 text-yellow-700': state === 'SUPLETORIO',
+                                        'bg-gray-100 text-gray-600': state === 'PENDIENTE'
+                                    }">
+                                        {{ state }}
+                                    </span>
+                                </td>
+
+                                <!-- Botón para abrir el Modal e ingresar notas -->
+                                <td class="text-center p-3">
+                                    <p-button
+                                        [icon]="CustomIcons.MAXIMIZE_SOLID"
+                                        severity="info"
+                                        [rounded]="true"
+                                        [text]="true"
+                                        pTooltip="Ingresar Calificaciones"
+                                        (onClick)="openGradeModal(detail)">
+                                    </p-button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p-dialog
+    header="Gestión de Calificaciones"
+    [(visible)]="isModalGradesOpen"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+    [draggable]="false"
+    [resizable]="false"
+    (onHide)="handleModalClose(false)">
+    @if (selectedStudent()) {
+        <app-grade-container
+            [enrollmentDetail]="selectedStudent()!"
+            [teacherDistributionId]="currentDistributionId()!"
+            (isModalGrades)="handleModalClose($event)">
+        </app-grade-container>
+    }
+</p-dialog>

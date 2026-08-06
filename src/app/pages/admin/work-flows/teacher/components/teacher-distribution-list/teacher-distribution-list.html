@@ -1,0 +1,88 @@
+<p-toolbar class="mb-5 border-none surface-card shadow-1" [style]="{'border-radius': '14px'}">
+  <div class="flex justify-content-between align-items-center w-full flex-wrap gap-3 p-2">
+    <div class="flex align-items-center gap-3">
+      <div class="yec-header-icon">
+        <i class="pi pi-graduation-cap"></i>
+      </div>
+      <div>
+        <h2 class="m-0 text-900 font-bold text-2xl">Yavirac English Center</h2>
+        <span class="text-500 font-medium">Distribución Académica de Docentes</span>
+      </div>
+    </div>
+    <div class="period-selector-container">
+      <i [class]="CustomIcons.CALENDAR_SOLID"></i>
+      <span class="text-500 font-medium mr-1 hidden sm:block">Periodo:</span>
+      <p-select [options]="schoolPeriods()"
+                [ngModel]="selectedSchoolPeriod()"
+                (ngModelChange)="onSchoolPeriodChange($event)"
+                optionLabel="name"
+                dataKey="id"
+                placeholder="Seleccione el periodo">
+      </p-select>
+    </div>
+  </div>
+</p-toolbar>
+
+<div class="cards-container">
+  @for (teacherDistribution of teacherDistributions(); track teacherDistribution.id) {
+    <div class="teacher-card">
+      <div class="card-header">
+        <div class="flex justify-content-between align-items-center">
+          <h3>{{ teacherDistribution.subject.name }}</h3>
+        </div>
+        <span class="mt-1 block">
+          Semestre: {{ teacherDistribution.subject.academicPeriod?.name ?? 'N/A' }}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <span class="font-semibold">
+            <i [class]="CustomIcons.GRADUATION_CAP_SOLID"></i>
+            Carrera:
+          </span>
+          <span class="text-right">
+            {{ teacherDistribution.subject.curriculum?.career?.name ?? 'Sin Carrera' }}
+          </span>
+        </div>
+        <div class="row">
+          <span class="font-semibold">
+            <i [class]="CustomIcons.MAXIMIZE_SOLID" class="mr-2 text-primary"></i>
+            Horario:
+          </span>
+          <span>
+            {{ teacherDistribution.workday.name }} - Paralelo "{{ teacherDistribution.parallel.name }}"
+          </span>
+        </div>
+        <div class="row">
+          <span class="font-semibold">
+            <i [class]="CustomIcons.MAXIMIZE_SOLID" class="mr-2 text-primary"></i>
+            Docente:
+          </span>
+          <span>
+            {{ teacherDistribution.teacher.user.name }} {{ teacherDistribution.teacher.user.lastname }}
+          </span>
+        </div>
+        <p-divider class="my-2"></p-divider>
+        <div class="flex flex-column mt-3">
+          <small class="text-color-secondary font-semibold mb-2">Estado de Calificaciones:</small>
+          <div class="tags">
+            @for (permission of teacherDistribution.partialPermissions; track permission.id ?? $index) {
+              <p-tag [severity]="permission.enabled ? 'success' : 'danger'"
+                     [icon]="permission.enabled ? CustomIcons.MAXIMIZE_SOLID : CustomIcons.MAXIMIZE_SOLID"
+                     [value]="permission.partial.name">
+              </p-tag>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <p-button
+          label="Gestionar Calificaciones"
+          [icon]="CustomIcons.MAXIMIZE_SOLID"
+          severity="primary"
+          (click)="redirectTeacherDistributionGrades(teacherDistribution)">
+        </p-button>
+      </div>
+    </div>
+  }
+</div>

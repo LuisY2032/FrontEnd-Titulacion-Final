@@ -239,8 +239,23 @@ export const MY_ROUTES = {
                 base: 'users/profile',
                 absolute: '/main/admin/users/profile'
             }
-        }
+        },
+        teacher: {
+        base: 'teacher',
+        absolute: '/main/admin/teacher',
+
+        distribution: {
+            base: 'teacher-distribution',
+            absolute: '/main/admin/teacher-distribution'
+        },
+
+        grades: {
+        base: 'grades',
+        absolute: '/main/admin/teacher/grades'
+    }
+    }
     },
+
     dashboards: {
         base: 'dashboards',
         absolute: '/main/dashboards'

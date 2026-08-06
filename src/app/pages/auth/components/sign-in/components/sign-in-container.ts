@@ -181,6 +181,7 @@ export default class SignInContainer implements OnInit {
         this.service.signIn(payload).subscribe({
             next: (data) => {
                 if (data.roles.length === 1) {
+                this.authService.role = data.roles[0];
                     this.router.navigate([MY_ROUTES.dashboards.absolute]);
                     return;
                 }

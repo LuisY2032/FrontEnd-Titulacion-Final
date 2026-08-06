@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { MY_ROUTES } from '@routes';
 
 @Component({
     selector: 'app-menu',
@@ -25,7 +26,7 @@ export class AppMenu {
         this.model = [
             {
                 label: 'Home',
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: [MY_ROUTES.dashboards.absolute] }]
             },
             {
                 label: 'UI Components',
@@ -42,6 +43,7 @@ export class AppMenu {
                     { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'] },
                     { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
                     { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
+                    { label: 'Teacher', icon: 'pi pi-fw pi-user', routerLink: [MY_ROUTES.adminPages.teacher.distribution.absolute] },
                     { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
                     { label: 'Timeline', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/timeline'] },
                     { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
