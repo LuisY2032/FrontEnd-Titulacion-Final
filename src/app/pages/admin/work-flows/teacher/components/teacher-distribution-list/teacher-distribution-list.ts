@@ -1,12 +1,12 @@
 import { Component, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { SchoolPeriodInterface, TeacherDistributionInterface } from '../../teacher-distribution.state';
+import { FieldTree, form, FormField } from '@angular/forms/signals';
+import { SchoolPeriodInterface, TeacherDistributionInterface, TeacherDistributionFormInterface } from '../../teacher-distribution.state';
 import { BreadcrumbService } from '@layout/service/breadcrumb.service';
 import { AppService, CustomMessageService } from '@utils/services';
 import { BreadcrumbEnum } from '@utils/enums/breadcrumb.enum';
 import { AuthService } from '@modules/auth/auth.service';
 import { CustomIcons } from '@utils/icons/custom-icons';
 import { Router } from '@angular/router';
-import { MY_ROUTES } from '@routes';
 import { TeacherDistributionService } from '../../teacher-distribution.service';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -14,13 +14,20 @@ import { SelectModule } from 'primeng/select';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { FormsModule } from '@angular/forms';
 import { SkeletonEnum } from '@utils/enums/skeleton.enum';
 
 @Component({
     selector: 'app-teacher-distribution-list',
     templateUrl: './teacher-distribution-list.html',
-    imports: [CommonModule, ToolbarModule, SelectModule, DividerModule, TagModule, ButtonModule, FormsModule]
+    imports: [
+        CommonModule, 
+        ToolbarModule, 
+        SelectModule, 
+        DividerModule, 
+        TagModule, 
+        ButtonModule,
+        FormField
+    ]
 })
 export default class TeacherDistributionList implements OnInit {
     protected readonly CustomIcons = CustomIcons;
@@ -32,15 +39,20 @@ export default class TeacherDistributionList implements OnInit {
     private readonly teacherDistributionService = inject(TeacherDistributionService);
     private readonly breadcrumbService = inject(BreadcrumbService);
 
-    protected selectedSchoolPeriod: WritableSignal<SchoolPeriodInterface | null> = signal(null);
+    // 1. Señal con la estructura del formulario (siguiendo la convención 'form$' de tu profesor)
+    protected readonly form$: WritableSignal<TeacherDistributionFormInterface> = signal({
+        schoolPeriod: null
+    });
+    protected readonly formData: FieldTree<TeacherDistributionFormInterface> = form(this.form$);
     protected schoolPeriods: WritableSignal<SchoolPeriodInterface[]> = signal([]);
     protected teacherDistributions: WritableSignal<TeacherDistributionInterface[]> = signal([]);
 
     constructor() {
         this.breadcrumbService.setItems([{ label: BreadcrumbEnum.TEACHER_DISTRIBUTIONS }]);
 
+        // Reacciona al cambio de 'schoolPeriod' dentro de la señal form$
         effect(() => {
-            const period = this.selectedSchoolPeriod();
+            const period = this.form$().schoolPeriod;
             if (period) {
                 this.findTeacherDistributionsByTeacher(period.id);
             }
@@ -57,7 +69,8 @@ export default class TeacherDistributionList implements OnInit {
                 this.schoolPeriods.set(schoolPeriods);
                 this.teacherDistributionService.findOpenSchoolPeriod().subscribe({
                     next: (openPeriod) => {
-                        this.selectedSchoolPeriod.set(openPeriod);
+                        // Actualización de la señal form$
+                        this.form$.update(state => ({ ...state, schoolPeriod: openPeriod }));
                     }
                 });
             }
@@ -65,17 +78,12 @@ export default class TeacherDistributionList implements OnInit {
     }
 
     onSchoolPeriodChange(period: SchoolPeriodInterface): void {
-        this.selectedSchoolPeriod.set(period);
+        this.form$.update(state => ({ ...state, schoolPeriod: period }));
     }
 
     findTeacherDistributionsByTeacher(schoolPeriodId: string): void {
-        console.log('🔍 ESTRUCTURA COMPLETA DE AUTH:', this.authService.auth);
-
         const teacherId = this.authService.auth?.teacher?.id;
 
-        console.log('--- ENVIANDO TEACHER ID ---:', teacherId);
-
-        //SI NO HAY TEACHER ID O SCHOOL PERIOD, DETENEMOS LA EJECUCIÓN
         if (!teacherId) {
             console.warn('⚠️ No se puede consultar la distribución: teacherId es undefined.');
             this.teacherDistributions.set([]);
@@ -88,11 +96,7 @@ export default class TeacherDistributionList implements OnInit {
         }
 
         this.teacherDistributionService
-            .findTeacherDistributionsByTeacher(
-                //this.authService.auth?.teacher?.id!,
-                teacherId,
-                schoolPeriodId
-            )
+            .findTeacherDistributionsByTeacher(teacherId, schoolPeriodId)
             .subscribe({
                 next: (teacherDistributions) => {
                     this.teacherDistributions.set(teacherDistributions);

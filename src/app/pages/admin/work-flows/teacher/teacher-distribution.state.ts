@@ -10,6 +10,8 @@ export interface TeacherDistributionData {
     grade2: number | null;
 
     attendance: number | null;
+
+
 }
 
 export const INITIAL_STATE: TeacherDistributionState = {  
@@ -18,14 +20,17 @@ export const INITIAL_STATE: TeacherDistributionState = {
 
         grade2: null,
 
-        attendance: null
+        attendance: null,
+
     },
 
     
 };
 
 
-
+export interface TeacherDistributionFormInterface {
+    schoolPeriod: SchoolPeriodInterface | null;
+}
 
 export interface TeacherDistributionInterface {
     id: string;

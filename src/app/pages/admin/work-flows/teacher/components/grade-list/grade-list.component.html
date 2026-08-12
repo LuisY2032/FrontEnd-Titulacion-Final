@@ -15,14 +15,14 @@
                     <th class="p-3 text-center">Parcial 2</th>
                     <th class="p-3 text-center">Asistencia</th>
                     <th class="p-3 text-center">Nota Final</th>
-                    <th class="p-3 text-center">Estado</th> <!-- Columna 7 -->
-                    <th class="p-3 text-center">Acciones</th> <!-- Columna 8 -->
+                    <th class="p-3 text-center">Estado</th> 
+                    <th class="p-3 text-center">Acciones</th> 
                 </tr>
             </thead>
             <tbody>
                 @if (isLoading()) {
                     <tr>
-                        <!-- 🟢 Actualizado a colspan="8" -->
+                        
                         <td colspan="8" class="text-center p-4">
                             Cargando estudiantes...
                         </td>
@@ -30,7 +30,7 @@
                 } @else {
                     @if (students().length === 0) {
                         <tr>
-                            <!-- 🟢 Actualizado a colspan="8" -->
+                            
                             <td colspan="8" class="text-center p-4">
                                 No se encontraron estudiantes registrados o el servidor no respondió.
                             </td>
@@ -88,7 +88,7 @@
                                 <!-- Botón para abrir el Modal e ingresar notas -->
                                 <td class="text-center p-3">
                                     <p-button
-                                        [icon]="CustomIcons.MAXIMIZE_SOLID"
+                                        [icon]="CustomIcons.PENCIL_SOLID"
                                         severity="info"
                                         [rounded]="true"
                                         [text]="true"

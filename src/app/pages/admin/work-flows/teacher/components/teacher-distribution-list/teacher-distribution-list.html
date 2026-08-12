@@ -13,8 +13,7 @@
       <i [class]="CustomIcons.CALENDAR_SOLID"></i>
       <span class="text-500 font-medium mr-1 hidden sm:block">Periodo:</span>
       <p-select [options]="schoolPeriods()"
-                [ngModel]="selectedSchoolPeriod()"
-                (ngModelChange)="onSchoolPeriodChange($event)"
+                [formField]="$any(formData.schoolPeriod)"
                 optionLabel="name"
                 dataKey="id"
                 placeholder="Seleccione el periodo">
@@ -46,7 +45,7 @@
         </div>
         <div class="row">
           <span class="font-semibold">
-            <i [class]="CustomIcons.MAXIMIZE_SOLID" class="mr-2 text-primary"></i>
+            <i [class]="CustomIcons.CALENDAR_WEEK_SOLID" class="mr-2 text-primary"></i>
             Horario:
           </span>
           <span>
@@ -55,7 +54,7 @@
         </div>
         <div class="row">
           <span class="font-semibold">
-            <i [class]="CustomIcons.MAXIMIZE_SOLID" class="mr-2 text-primary"></i>
+            <i [class]="CustomIcons.PERSON_SOLID" class="mr-2 text-primary"></i>
             Docente:
           </span>
           <span>
@@ -68,7 +67,7 @@
           <div class="tags">
             @for (permission of teacherDistribution.partialPermissions; track permission.id ?? $index) {
               <p-tag [severity]="permission.enabled ? 'success' : 'danger'"
-                     [icon]="permission.enabled ? CustomIcons.MAXIMIZE_SOLID : CustomIcons.MAXIMIZE_SOLID"
+                     [icon]="permission.enabled ? CustomIcons.CHECK_SOLID : CustomIcons.TIMELINE_SOLID"
                      [value]="permission.partial.name">
               </p-tag>
             }
@@ -78,7 +77,7 @@
       <div class="card-footer">
         <p-button
           label="Gestionar Calificaciones"
-          [icon]="CustomIcons.MAXIMIZE_SOLID"
+          [icon]="CustomIcons.PENCIL_SOLID"
           severity="primary"
           (click)="redirectTeacherDistributionGrades(teacherDistribution)">
         </p-button>
