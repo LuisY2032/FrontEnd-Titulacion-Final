@@ -33,7 +33,7 @@ export default class GradeList implements OnInit {
 
   constructor() {
     this.breadcrumbService.setItems([
-      { label: 'Docente', routerLink: ['/main/admin/teacher/teacher-distribution'] },
+      { label: 'Distributivo Docente', routerLink: ['/main/admin/teacher-distribution'] },
       { label: 'Calificaciones de la Materia' }
     ]);
   }
